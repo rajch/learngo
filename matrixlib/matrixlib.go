@@ -77,6 +77,20 @@ func (lhs IntMatrix) SetFrom(rhs IntMatrix) {
 	})
 }
 
+// SetValues sets the values passed into this matrix in row-first order
+func (lhs IntMatrix) SetValues(values ...int) {
+	if len(values) > 0 {
+		index := 0
+		iterate(lhs, func(x int, y int) {
+			if index < len(values) {
+				lhs.matrix[x][y] = values[index]
+				index++
+
+			}
+		})
+	}
+}
+
 // Add adds elements from another matrix into this one
 func (lhs IntMatrix) Add(rhs IntMatrix) {
 	iterate(lhs, func(x int, y int) {

@@ -89,4 +89,11 @@ func main() {
 	fmt.Println(m2)
 	m1.Add(m2)
 	fmt.Println(m1)
+
+	// Case 8: variadic method
+	fmt.Println("\nCase 8: setting m8 using variadic SetValues method")
+	m8 := matrixlib.Create(3)
+	m8.SetValues(10, 20, 30, 40, 50)
+	fmt.Println(m8)
+
 }
