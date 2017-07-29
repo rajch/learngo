@@ -66,8 +66,8 @@ func main() {
 	fmt.Println(m6)
 	fmt.Println(m3, ok)
 
-	// Case 7: Casting for type
-	fmt.Println("\nCase 5: Add m1(3x3) to m7(m6 cast as IntMatrix)")
+	// Case 6: Casting for type
+	fmt.Println("\nCase 6: Add m1(3x3) to m7(m6 cast as IntMatrix)")
 	m7 := matrixlib.IntMatrix(m6)
 
 	m3, ok = matrixlib.Add(m1, m7)
@@ -75,4 +75,11 @@ func main() {
 	fmt.Println(m7)
 	fmt.Println(m3, ok)
 
+	// Case 7: using methods
+	fmt.Println("\nCase 7: setting m1 to all 10s, adding m2 to m1 itself")
+	m1.SetAll(10)
+	fmt.Println("m1 after setting, before adding:", m1)
+	fmt.Println(m2)
+	m1.Add(m2)
+	fmt.Println(m1)
 }

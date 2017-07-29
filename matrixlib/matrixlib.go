@@ -50,3 +50,39 @@ func Subtract(one IntMatrix, two IntMatrix) (IntMatrix, bool) {
 	})
 	return resultmatrix, resultstatus
 }
+
+func rowwiseexecute(lhs IntMatrix, rhs IntMatrix, operation func(int, int)) {
+	for i, onerow := range lhs {
+		for j := range onerow {
+			operation(i, j)
+		}
+	}
+}
+
+// SetAll sets all elements in the matrix to the given value
+func (lhs IntMatrix) SetAll(value int) {
+	rowwiseexecute(lhs, nil, func(x int, y int) {
+		lhs[x][y] = value
+	})
+}
+
+// SetFrom sets all elements in the matrix from another matrix
+func (lhs IntMatrix) SetFrom(rhs IntMatrix) {
+	rowwiseexecute(lhs, rhs, func(x int, y int) {
+		lhs[x][y] = rhs[x][y]
+	})
+}
+
+// Add adds elements from another matrix into this one
+func (lhs IntMatrix) Add(rhs IntMatrix) {
+	rowwiseexecute(lhs, rhs, func(x int, y int) {
+		lhs[x][y] += rhs[x][y]
+	})
+}
+
+// Subtract subtracts elements from another matrix in this one
+func (lhs IntMatrix) Subtract(rhs IntMatrix) {
+	rowwiseexecute(lhs, rhs, func(x int, y int) {
+		lhs[x][y] -= rhs[x][y]
+	})
+}
