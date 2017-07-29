@@ -6,11 +6,11 @@ import (
 )
 
 func (lhs IntMatrix) String() string {
-	elements := make([]string, len(lhs)*len(lhs))
+	elements := make([]string, lhs.Size*lhs.Size)
 	index := 0
-	rowwiseexecute(lhs, nil, func(x int, y int) {
-		element := fmt.Sprintf("%3d", lhs[x][y])
-		if y == len(lhs)-1 {
+	iterate(lhs, func(x int, y int) {
+		element := fmt.Sprintf("%3d", lhs.matrix[x][y])
+		if y == lhs.Size-1 {
 			element += "\n"
 		} else {
 			element += "\t"
