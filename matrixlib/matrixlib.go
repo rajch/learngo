@@ -1,7 +1,10 @@
 package matrixlib
 
+// IntMatrix is an square integer matrix of the specified dimentions
+type IntMatrix [][]int
+
 // Create creates a square matrix of the specified dimension
-func Create(size int) [][]int {
+func Create(size int) IntMatrix {
 	result := make([][]int, size)
 	for i := range result {
 		result[i] = make([]int, size)
@@ -9,8 +12,8 @@ func Create(size int) [][]int {
 	return result
 }
 
-func rowwiseoperate(one [][]int, two [][]int, operation func(int, int) int) ([][]int, bool) {
-	var resultmatrix [][]int
+func rowwiseoperate(one IntMatrix, two IntMatrix, operation func(int, int) int) (IntMatrix, bool) {
+	var resultmatrix IntMatrix
 
 	resultstatus := len(one) == len(two)
 
@@ -33,7 +36,7 @@ func rowwiseoperate(one [][]int, two [][]int, operation func(int, int) int) ([][
 }
 
 // Add adds two matrices
-func Add(one [][]int, two [][]int) ([][]int, bool) {
+func Add(one IntMatrix, two IntMatrix) (IntMatrix, bool) {
 	resultmatrix, resultstatus := rowwiseoperate(one, two, func(leftval int, rightval int) int {
 		return leftval + rightval
 	})
@@ -41,7 +44,7 @@ func Add(one [][]int, two [][]int) ([][]int, bool) {
 }
 
 // Subtract subtracts two matrices
-func Subtract(one [][]int, two [][]int) ([][]int, bool) {
+func Subtract(one IntMatrix, two IntMatrix) (IntMatrix, bool) {
 	resultmatrix, resultstatus := rowwiseoperate(one, two, func(leftval int, rightval int) int {
 		return leftval - rightval
 	})

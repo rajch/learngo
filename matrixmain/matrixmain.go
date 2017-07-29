@@ -56,4 +56,23 @@ func main() {
 	fmt.Println(m5)
 	fmt.Println(m3, ok)
 
+	// Case 5: Should not compile, but does. m6 is [][]int, which is an "unnamed" type
+	// Unnamed types are interchangable with their redifinition, in this case IntMatrix
+	fmt.Println("\nCase 5: Add m1(3x3) to m6(3x3 [][]int)")
+	m6 := [][]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}
+
+	m3, ok = matrixlib.Add(m1, m6)
+	fmt.Println(m1)
+	fmt.Println(m6)
+	fmt.Println(m3, ok)
+
+	// Case 7: Casting for type
+	fmt.Println("\nCase 5: Add m1(3x3) to m7(m6 cast as IntMatrix)")
+	m7 := matrixlib.IntMatrix(m6)
+
+	m3, ok = matrixlib.Add(m1, m7)
+	fmt.Println(m1)
+	fmt.Println(m7)
+	fmt.Println(m3, ok)
+
 }
