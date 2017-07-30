@@ -1,20 +1,24 @@
 package intaggregators
 
-// IntSumAggregator calculates totals
-type IntSumAggregator struct {
+type intAccAggregator struct {
 	accumulator int
 	count       int
 }
 
 // Reset resets the total to 0
-func (ag *IntSumAggregator) Reset() {
+func (ag *intAccAggregator) Reset() {
 	ag.accumulator, ag.count = 0, 0
 }
 
 // Add adds the number to the aggregator
-func (ag *IntSumAggregator) Add(elem int) {
+func (ag *intAccAggregator) Add(elem int) {
 	ag.accumulator += elem
 	ag.count++
+}
+
+// IntSumAggregator calculates totals
+type IntSumAggregator struct {
+	intAccAggregator
 }
 
 // Aggregate returns the total and the number of elements
@@ -25,19 +29,7 @@ func (ag *IntSumAggregator) Aggregate() (int, int) {
 
 // IntAvgAggregator calculates averages
 type IntAvgAggregator struct {
-	accumulator int
-	count       int
-}
-
-// Reset resets the total to 0
-func (ag *IntAvgAggregator) Reset() {
-	ag.accumulator, ag.count = 0, 0
-}
-
-// Add adds the number to the aggregator
-func (ag *IntAvgAggregator) Add(elem int) {
-	ag.accumulator += elem
-	ag.count++
+	intAccAggregator
 }
 
 // Aggregate returns the average and the number of elements
