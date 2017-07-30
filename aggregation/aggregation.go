@@ -56,4 +56,7 @@ func main() {
 	numbers := generateNumbers(1000)
 	simpleSum(numbers, 0)
 	partitionedSum(numbers, 3)
+
+	var i string
+	fmt.Scanln(&i)
 }
