@@ -9,7 +9,11 @@ type IntAggregator interface {
 
 // SimpleAggregate calculates an aggregate of a slice of ints
 func SimpleAggregate(ag IntAggregator, numbers []int) (result int, elementcount int) {
-	return
+	ag.Reset()
+	for _, value := range numbers {
+		ag.Add(value)
+	}
+	return ag.Aggregate()
 }
 
 // PartitionedAggregate calculates aggregates by slicing the input set into partitions

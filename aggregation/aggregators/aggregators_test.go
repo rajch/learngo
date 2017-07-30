@@ -4,12 +4,13 @@ import "testing"
 import "github.com/rajch/learngo/aggregation/aggregators/intaggregators"
 
 func TestSimpleAggregate(t *testing.T) {
-	total, cnt := SimpleAggregate(intaggregators.IntSumAggregator{}, []int{1, 2, 3, 4, 5})
+	ag := new(intaggregators.IntSumAggregator)
+	total, cnt := SimpleAggregate(ag, []int{1, 2, 3, 4, 5})
 	if total != 15 || cnt != 5 {
-		t.Error("Total not calculated properly")
+		t.Errorf("Total not calculated properly. Total was %v, count %v.", total, cnt)
 	}
 }
 
 func TestPartionedAggregate(t *testing.T) {
-	t.Error("Test not written")
+	t.Skip("Test not written, but skipping for now.")
 }
