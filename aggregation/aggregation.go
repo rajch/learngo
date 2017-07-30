@@ -44,11 +44,11 @@ func partitionedSum(numbers []int, partitions int) {
 
 	var i int
 	for i = 0; i < partitions; i++ {
-		simpleSum(numbers[index:index+(partsize-1)], i)
+		go simpleSum(numbers[index:index+(partsize-1)], i)
 		index += partsize
 	}
 	if index < len(numbers) {
-		simpleSum(numbers[index:], i)
+		go simpleSum(numbers[index:], i)
 	}
 }
 
