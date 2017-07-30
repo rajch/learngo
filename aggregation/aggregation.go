@@ -11,7 +11,7 @@ import (
 
 func timeTrack(start time.Time, name string) {
 	elapsed := time.Since(start)
-	fmt.Printf("%s took %s\n", name, elapsed)
+	fmt.Printf("%s took %s\n\n\n", name, elapsed)
 }
 
 func generateNumbers(size int) (numbers []int) {
@@ -20,55 +20,64 @@ func generateNumbers(size int) (numbers []int) {
 	fmt.Printf("Generating %d numbers..\n.", size)
 	numbers = make([]int, size)
 	for i := 0; i < size; i++ {
-		numbers[i] = rand.Int()
+		numbers[i] = rand.Intn(200)
 	}
 	return
 }
 
-func simpleSum(numbers []int, partionnum int, done chan int) {
-	defer timeTrack(time.Now(), "simpleSum()")
-
-	fmt.Printf("\nCalculating sum for partition %d...\n", partionnum)
+func doSum(numbers []int, partionnum int, done chan int) {
+	fmt.Printf("Calculating sum for partition %d...\n", partionnum)
 	sumag := new(intaggregators.IntSumAggregator)
 	total, cnt := aggregators.SimpleAggregate(sumag, numbers)
 	fmt.Printf("Partition %d: Sum of %d numbers is %d\n", partionnum, cnt, total)
 
 	if done != nil {
-		done <- partionnum
+		done <- total
 	}
 }
 
-func partitionedSum(numbers []int, partitionsize int) {
+func simpleSum(numbers []int) {
+	defer timeTrack(time.Now(), "simpleSum()")
+	fmt.Println("\nCalculating simple sum...")
+
+	doSum(numbers, 0, nil)
+}
+
+func partitionedSum(numbers []int, partitioncount int) {
 	defer timeTrack(time.Now(), "partitionedSum()")
+	fmt.Println("\nCalculating partitioned sum...")
 
 	donechannel := make(chan int)
 
-	fmt.Printf("\nCalculating sum for %d numbers...\n", partitionsize)
-	partcnt := len(numbers) / partitionsize
+	partsize := len(numbers) / partitioncount
+	leftover := len(numbers) % partitioncount
+
 	index := 0
 
-	var i int
-	for i = 0; i < partcnt; i++ {
-		go simpleSum(numbers[index:index+(partitionsize-1)], i, donechannel)
-		index += partitionsize
-	}
-	if index < len(numbers) {
-		partcnt++
-		go simpleSum(numbers[index:], partcnt, donechannel)
+	for i := 0; i < partitioncount; i++ {
+		offset := partsize
+		if i == 0 {
+			offset += leftover
+		}
 
+		go doSum(numbers[index:index+(offset)], i, donechannel)
+		index += offset
 	}
 
 	fmt.Println("All partitions dispatched. Waiting...")
-	for hit := 0; hit < partcnt; hit++ {
-		<-donechannel
+
+	total := 0
+	for hit := 0; hit < partitioncount; hit++ {
+		partitiontotal := <-donechannel
+		total += partitiontotal
 	}
+	fmt.Printf("Sum of %d partitions is %d\n", partitioncount, total)
 }
 
 func main() {
-	numbers := generateNumbers(1000)
-	simpleSum(numbers, 0, nil)
-	partitionedSum(numbers, 300)
+	size, partioncount := 100000, 5
 
-	//var i string
-	//fmt.Scanln(&i)
+	numbers := generateNumbers(size)
+	simpleSum(numbers)
+	partitionedSum(numbers, partioncount)
 }
