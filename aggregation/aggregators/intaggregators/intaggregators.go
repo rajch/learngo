@@ -22,3 +22,26 @@ func (ag *IntSumAggregator) Add(elem int) {
 func (ag *IntSumAggregator) Aggregate() (int, int) {
 	return ag.accumulator, ag.count
 }
+
+// IntAvgAggregator calculates averages
+type IntAvgAggregator struct {
+	accumulator int
+	count       int
+}
+
+// Reset resets the total to 0
+func (ag *IntAvgAggregator) Reset() {
+	ag.accumulator, ag.count = 0, 0
+}
+
+// Add adds the number to the aggregator
+func (ag *IntAvgAggregator) Add(elem int) {
+	ag.accumulator += elem
+	ag.count++
+}
+
+// Aggregate returns the average and the number of elements
+// added to the aggregator
+func (ag *IntAvgAggregator) Aggregate() (int, int) {
+	return int(float32(ag.accumulator) / float32(ag.count)), ag.count
+}
