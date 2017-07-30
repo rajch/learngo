@@ -25,7 +25,7 @@ func generateNumbers(size int) (numbers []int) {
 	return
 }
 
-func simpleSum(numbers []int, partionnum int) {
+func simpleSum(numbers []int, partionnum int, done chan int) {
 	defer timeTrack(time.Now(), "simpleSum()")
 
 	fmt.Printf("\nCalculating sum for partition %d...\n", partionnum)
@@ -33,30 +33,42 @@ func simpleSum(numbers []int, partionnum int) {
 	total, cnt := aggregators.SimpleAggregate(sumag, numbers)
 	fmt.Printf("Partition %d: Sum of %d numbers is %d\n", partionnum, cnt, total)
 
+	if done != nil {
+		done <- partionnum
+	}
 }
 
-func partitionedSum(numbers []int, partitions int) {
+func partitionedSum(numbers []int, partitionsize int) {
 	defer timeTrack(time.Now(), "partitionedSum()")
 
-	fmt.Printf("\nCalculating sum for %d partitions...\n", partitions)
-	partsize := len(numbers) / partitions
+	donechannel := make(chan int)
+
+	fmt.Printf("\nCalculating sum for %d numbers...\n", partitionsize)
+	partcnt := len(numbers) / partitionsize
 	index := 0
 
 	var i int
-	for i = 0; i < partitions; i++ {
-		go simpleSum(numbers[index:index+(partsize-1)], i)
-		index += partsize
+	for i = 0; i < partcnt; i++ {
+		go simpleSum(numbers[index:index+(partitionsize-1)], i, donechannel)
+		index += partitionsize
 	}
 	if index < len(numbers) {
-		go simpleSum(numbers[index:], i)
+		partcnt++
+		go simpleSum(numbers[index:], partcnt, donechannel)
+
+	}
+
+	fmt.Println("All partitions dispatched. Waiting...")
+	for hit := 0; hit < partcnt; hit++ {
+		<-donechannel
 	}
 }
 
 func main() {
 	numbers := generateNumbers(1000)
-	simpleSum(numbers, 0)
-	partitionedSum(numbers, 3)
+	simpleSum(numbers, 0, nil)
+	partitionedSum(numbers, 300)
 
-	var i string
-	fmt.Scanln(&i)
+	//var i string
+	//fmt.Scanln(&i)
 }
